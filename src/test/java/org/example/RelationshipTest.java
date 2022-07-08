@@ -4,12 +4,10 @@ import org.example.dao.ClientDao;
 import org.example.dao.OrderDao;
 import org.example.entity.Client;
 import org.example.entity.Order;
-import org.example.jpa.EntityManagerSingleton;
 import org.example.utils.ClientState;
 import org.example.utils.OrderState;
 import org.junit.Test;
-import javax.persistence.EntityManager;
-
+import java.util.List;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
 
@@ -42,15 +40,22 @@ public class RelationshipTest {
 
         // Test de la correspondance client et clientId
 
-       assertEquals(order.getClient(),client);
+        assertEquals(client.getId(), order.getClient().getId() );
 
-       // Test du delete cascade : si je supprime le client, est ce que l'order associée supprimée
+        assertEquals(order.getClient(),client);
 
-       ClientDao.deleteClient(client);
+        // Test du delete cascade : si je supprime le client, est ce que l'order associée supprimée
 
-       EntityManager em = EntityManagerSingleton.getEntityManager();
-       em.clear();
+        List<Order> orders = OrderDao.findAllOrders();
+        int listLength = orders.size();
 
-       assertNull(order);
+        ClientDao.deleteClient(client);
+
+        orders = OrderDao.findAllOrders();
+        assertEquals(listLength - 1, orders.size());
+
+        // Test autrement
+
+        assertNull(ClientDao.findClientById(client.getId()));
     }
 }

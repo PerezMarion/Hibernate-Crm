@@ -86,12 +86,12 @@ public class OrderTest {
         OrderDao.createOrder(order);
 
         List<Order> orders = OrderDao.findAllOrders();
-        int listLenght = orders.size();
+        int listLength = orders.size();
 
         OrderDao.deleteOrder(order);
 
         orders = OrderDao.findAllOrders();
-        assertEquals(listLenght - 1, orders.size());
+        assertEquals(listLength - 1, orders.size());
 
         ClientDao.deleteClient(client);
     }
